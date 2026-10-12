@@ -4,276 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>معرض الصور المطور - الاعدادية</title>
-
+<link rel="stylesheet" href="styles.css">
   </head>
-<style>
-  
-
-        body {
-            font-family: Tahoma, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0; 
-            padding: 0;
-            direction: rtl;
-            text-align: right;
-        }
-        
-        /* هيدر ثابت ومتناسق */
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-        .app-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0;
-        }
-        
-        /* شريط التنقل السفلي المستقل */
-        .sub-nav {
-            background-color: #34495e;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            position: sticky;
-            top: 57px; /* تحت الهيدر مباشرة */
-            z-index: 999;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .sub-nav a {
-            color: #ecf0f1;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-            transition: color 0.3s;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-        .sub-nav a:hover, .sub-nav a.active {
-            color: #3498db;
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        /* تنسيق القائمة الجانبية (Sidebar) */
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 2000;
-            top: 0;
-            right: 0;
-            background-color: #2c3e50;
-            overflow-x: hidden;
-            transition: 0.3s;
-            padding-top: 60px;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-        }
-        .sidebar a {
-            padding: 12px 25px;
-            text-decoration: none;
-            font-size: 16px;
-            color: #ecf0f1;
-            display: block;
-            transition: 0.2s;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .sidebar a:hover {
-            background-color: #34495e;
-            color: #3498db;
-        }
-        .sidebar .close-btn {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 28px;
-            background: none;
-            border: 3px;
-			background-color:#;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* خلفية شفافة عند فتح القائمة الجانبية */
-        #overlay {
-            display: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1500;
-        }
-
-        main {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
-        .upload-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .file-upload-btn {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 12px 25px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-bottom: 10px;
-        }
-        .file-upload-btn:hover {
-            background-color: #2980b9;
-        }
-        #imageInput {
-            display: none;
-        }
-        #publishBtn {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: block;
-            width: 100%;
-            margin-top: 10px;
-            transition: background 0.3s;
-        }
-        #publishBtn:hover {
-            background-color: #27ae60;
-        }
-        #fileNameDisplay {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* تنسيق اللاياوت المتحرك يمين ويسار (Slider) */
-        .slider-section {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-        .slider-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .slider-track {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding: 10px 0;
-            width: 100%;
-            scrollbar-width: none;
-        }
-        .slider-track::-webkit-scrollbar {
-            display: none;
-        }
-        .slider-item {
-            flex: 0 0 150px;
-            height: 150px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .slider-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .slider-btn {
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: background 0.3s;
-        }
-        .slider-btn:hover {
-            background-color: #34495e;
-        }
-        .prev-btn { right: -20px; }
-        .next-btn { left: -20px; }
-
-        /* تنسيق قسم الصور في الأسفل */
-        .grid-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .custom-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        .grid-box {
-            background: #fafafa;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            text-align: center;
-        }
-        .grid-box img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .empty-msg {
-            color: #888;
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 20px;
-        }
-
-  
-</style>
+ 
   
   <body>
 
@@ -289,7 +22,7 @@
     <!-- شريط التنقل السفلي المستقل وحده -->
     <nav class="sub-nav">
       <a href="index.html" class="nav-link">الرئيسية</a>
-      <a href="mybatch.html" class="nav-link">دفعتي</a>
+     
       <a href="uni_activitys.html" class="nav-link">نشاطات الجامعة</a>
       <a href="uni_adverts.html" class="nav-link">إعلانات امتحانات</a>
     </nav>
@@ -297,25 +30,17 @@
     <!-- القائمة الجانبية (Sidebar) -->
     <div id="mySidebar" class="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">&times;</button>
-      <a href="favorites.html">المفضلة</a>
-      <a href="about.html">عن التطبيق</a>
-      <a href="contact.html">تواصل معنا</a>
+      
       <a href="login.html">تسجيل دخول</a>
-	  <a href="settings.html">الإعدادات</a>
+      <a href="contact.html">تواصل معنا</a>
+	    <a href="settings.html">الإعدادات</a>
     </div>
 
     <!-- طبقة شفافة تغطي الشاشة عند فتح القائمة -->
     <div id="overlay" onclick="toggleSidebar()"></div>
 
     <main>
-	  <!-- قسم رفع الصور -->
-	  <div class="upload-card">
-		<h3>شارك صورة جديدة</h3>
-		<input type="file" id="imageInput" accept="image/*">
-		<label for="imageInput" class="file-upload-btn">📁 اختر صورة من جهازك</label>
-		<div id="fileNameDisplay">لم يتم اختيار أي صورة بعد</div>
-		<button id="publishBtn">نشر الصورة الآن</button>
-	  </div>
+
 
 	  <!-- 1. قسم اللاياوت المتحرك (يمين ويسار) -->
 	  <div class="slider-section">
@@ -338,121 +63,11 @@
 	  </div>
     </main>
 
-<script>
-        // تحديد الرابط النشط تلقائياً بناءً على الصفحة الحالية
-        const currentLocation = window.location.pathname.split("/").pop();
-        const navLinks = document.querySelectorAll('.sub-nav a');
-        navLinks.forEach(link => {
-            if(link.getAttribute('href') === currentLocation) {
-                link.classList.add('active');
-            }
-        });
 
-        // دالة التحكم في فتح وإغلاق القائمة الجانبية
-        function toggleSidebar() {
-            const sidebar = document.getElementById('mySidebar');
-            const overlay = document.getElementById('overlay');
-            if (sidebar.style.width === '250px') {
-                sidebar.style.width = '0';
-                overlay.style.display = 'none';
-            } else {
-                sidebar.style.width = '250px';
-                overlay.style.display = 'block';
-            }
-        }
+<script src="script.js">
 
-        const imageInput = document.getElementById('imageInput');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-
-        imageInput.addEventListener('change', function() {
-            if (this.files.length > 0) {
-                fileNameDisplay.textContent = "الصورة المختارة: " + this.files[0].name;
-            } else {
-                fileNameDisplay.textContent = "لم يتم اختيار أي صورة بعد";
-            }
-        });
-
-        // حدث النشر والحفظ في ذاكرة المتصفح
-        document.getElementById('publishBtn').addEventListener('click', function() {
-            if (imageInput.files.length === 0) {
-                alert('الرجاء اختيار صورة أولاً!');
-                return;
-            }
-
-            const file = imageInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const imageData = e.target.result;
-                let posts = JSON.parse(localStorage.getItem('posts')) || [];
-                
-                posts.unshift(imageData);
-                localStorage.setItem('posts', JSON.stringify(posts));
-
-                imageInput.value = '';
-                fileNameDisplay.textContent = "لم يتم اختيار أي صورة بعد";
-                loadAllPosts();
-                alert('تم نشر الصورة بنجاح!');
-            };
-
-            reader.readAsDataURL(file);
-        });
-
-        // دالة تحريك الـ Slider يمين ويسار عبر الأزرار
-        function slide(direction) {
-            const track = document.getElementById('sliderTrack');
-            const scrollAmount = 200;
-            track.scrollBy({
-                left: direction * scrollAmount,
-                behavior: 'smooth'
-            });
-        }
-
-        // دالة تحميل وتحديث العرض في كلا القسمين
-        function loadAllPosts() {
-            const sliderTrack = document.getElementById('sliderTrack');
-            const postsGrid = document.getElementById('postsGrid');
-            
-            sliderTrack.innerHTML = '';
-            postsGrid.innerHTML = '';
-            
-            let posts = JSON.parse(localStorage.getItem('posts')) || [];
-            
-            if (posts.length === 0) {
-                sliderTrack.innerHTML = '<p class="empty-msg" style="width:100%;">لا توجد صور في الشريط المتحرك.</p>';
-                postsGrid.innerHTML = '<p class="empty-msg">لا توجد صور منشورة حالياً.</p>';
-                return;
-            }
-
-            // تعبئة الشريط المتحرك (Slider)
-            posts.forEach(imgSrc => {
-                const sliderItem = document.createElement('div');
-                sliderItem.className = 'slider-item';
-                
-                const img = document.createElement('img');
-                img.src = imgSrc;
-                
-                sliderItem.appendChild(img);
-                sliderTrack.appendChild(sliderItem);
-            });
-
-            // تعبئة شبكة الصور (صورتين في كل صف بأبعاد محددة)
-            posts.forEach(imgSrc => {
-                const gridBox = document.createElement('div');
-                gridBox.className = 'grid-box';
-                
-                const img = document.createElement('img');
-                img.src = imgSrc;
-                
-                gridBox.appendChild(img);
-                postsGrid.appendChild(gridBox);
-            });
-        }
-
-        // تشغيل الدالة عند تحميل الصفحة
-        loadAllPosts();
+  
 </script>
-
   </body>
 </html>
 
