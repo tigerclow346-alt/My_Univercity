@@ -1,13 +1,12 @@
-// دالة فتح وإغلاق القائمة الجانبية للشريط
+// دالة فتح وإغلاق القائمة الجانبية للشري
 function toggleSidebar() {
-    var sidebar = document.getElementById("sideDrawer");
-    if (sidebar) {
-        // إذا كان العرض الحالي غير مفرغ أو صفر، قم بفتحه، وإلا أغلقه
-        if (sidebar.style.width === "280px") {
-            sidebar.style.width = "0px";
-        } else {
-            sidebar.style.width = "280px";
+            const sidebar = document.getElementById('mySidebar');
+            const overlay = document.getElementById('overlay');
+            if (sidebar.style.width === '250px') {
+                sidebar.style.width = '0';
+                overlay.style.display = 'none';
+            } else {
+                sidebar.style.width = '250px';
+                overlay.style.display = 'block';
+            }
         }
-    }
-}
-
