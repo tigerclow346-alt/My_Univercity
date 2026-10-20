@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النشر - الاعدادية</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+      /* ضمان ظهور النافذة المنبثقة بشكل صحيح فوق كل العناصر */
+      #previewModal {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.6);
+          z-index: 3000;
+          justify-content: center;
+          align-items: center;
+      }
+    </style>
   </head>
   <body>
 
@@ -37,7 +52,12 @@
       <!-- صندوق النشر على نمط فيسبوك -->
       <div class="fb-post-box">
         <div class="fb-box-top">
-          <img src="https://via.placeholder.com/150" alt="صورة البروفايل" class="user-avatar">
+          <!-- دائرة البروفايل قابلة للضغط لتغيير الصورة الشخصية -->
+          <img src="https://via.placeholder.com/150" alt="صورة البروفايل" class="user-avatar" id="adminAvatar" title="اضغط لتغيير صورتك الشخصية" style="cursor: pointer;" onclick="document.getElementById('avatarInput').click();">
+          
+          <!-- input مخفي خاص بتغيير صورة البروفايل -->
+          <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+
           <div class="fb-fake-input" onclick="document.getElementById('imageInput').click();">مرحباً مشرفنا، اضغط هنا لنشر صورة جديدة...</div>
         </div>
         <div class="fb-box-bottom">
@@ -49,18 +69,18 @@
       </div>
 
       <!-- النافذة المنبثقة (Modal) لمعاينة الصورة واختيار القسم -->
-      <div id="previewModal" class="modal-overlay">
-        <div class="modal-card">
-          <h3>تأكيد وتحديد قسم النشر</h3>
+      <div id="previewModal">
+        <div class="modal-card" style="background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+          <h3 style="margin-top: 0; color: #2c3e50;">تأكيد وتحديد قسم النشر</h3>
           
-          <div class="preview-img-container">
-            <img id="modalImagePreview" src="" alt="معاينة الصورة">
+          <div class="preview-img-container" style="width: 100%; height: 220px; border-radius: 8px; overflow: hidden; background: #f9f9f9; border: 1px dashed #ccc; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;">
+            <img id="modalImagePreview" src="" alt="معاينة الصورة" style="width: 100%; height: 100%; object-fit: cover;">
           </div>
 
           <!-- قائمة اختيار القسم المستهدف -->
           <div class="input-group" style="margin-bottom: 15px; text-align: right;">
             <label for="targetSection" style="font-weight: bold; display: block; margin-bottom: 5px; color: #2c3e50;">اختر أين تريد نشر الصورة:</label>
-            <select id="targetSection" onchange="toggleSubSection()" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: Tahoma, sans-serif;">
+            <select id="targetSection" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: Tahoma, sans-serif;">
               <option value="index">الرئيسية</option>
               <option value="uni_adverts">إعلانات امتحانات</option>
               <option value="uni_activitys">نشاطات الجامعة</option>
@@ -76,9 +96,9 @@
             </select>
           </div>
 
-          <div class="modal-buttons">
-            <button id="confirmPublishBtn" type="button" class="modal-btn-confirm">تأكيد النشر</button>
-            <button id="cancelPublishBtn" type="button" class="modal-btn-cancel">إلغاء</button>
+          <div class="modal-buttons" style="display: flex; gap: 10px;">
+            <button id="confirmPublishBtn" type="button" style="flex: 1; background-color: #2ecc71; color: white; border: none; padding: 10px; border-radius: 5px; font-size: 15px; cursor: pointer; font-weight: bold;">تأكيد النشر</button>
+            <button id="cancelPublishBtn" type="button" style="flex: 1; background-color: #e74c3c; color: white; border: none; padding: 10px; border-radius: 5px; font-size: 15px; cursor: pointer; font-weight: bold;">إلغاء</button>
           </div>
         </div>
       </div>
@@ -94,6 +114,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const imageInput = document.getElementById('imageInput');
+            const avatarInput = document.getElementById('avatarInput');
+            const adminAvatar = document.getElementById('adminAvatar');
             const previewModal = document.getElementById('previewModal');
             const modalImagePreview = document.getElementById('modalImagePreview');
             const targetSection = document.getElementById('targetSection');
@@ -103,16 +125,37 @@
             
             let selectedImageData = "";
 
+            // استرجاع صورة البروفايل المحفوظة مسبقاً إن وجدت
+            const savedAvatar = localStorage.getItem('admin_profile_avatar');
+            if (savedAvatar) {
+                adminAvatar.src = savedAvatar;
+            }
+
+            // عند اختيار صورة جديدة للبروفايل وتحديثها وحفظها
+            avatarInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const avatarData = e.target.result;
+                        adminAvatar.src = avatarData;
+                        localStorage.setItem('admin_profile_avatar', avatarData);
+                        alert('تم تحديث صورة البروفايل بنجاح!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
             // إظهار أو إخفاء القائمة الفرعية بناءً على اختيار الرئيسية
-            window.toggleSubSection = function() {
+            targetSection.addEventListener('change', function() {
                 if (targetSection.value === 'index') {
                     subSectionGroup.style.display = 'block';
                 } else {
                     subSectionGroup.style.display = 'none';
                 }
-            }
+            });
 
-            // عند اختيار صورة من الجهاز
+            // عند اختيار صورة للنشر وإظهار المودال بشكل صحيح
             imageInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {
@@ -120,14 +163,14 @@
                     reader.onload = function(e) {
                         selectedImageData = e.target.result;
                         modalImagePreview.src = selectedImageData;
-                        previewModal.style.display = 'flex'; // إظهار النافذة المنبثقة
+                        previewModal.style.display = 'flex'; // إظهار النافذة المنبثقة كطبقة فوق الشاشة
                     };
                     reader.readAsDataURL(file);
                 }
             });
 
-            // دالة إغلاق النافذة
-            window.closeModal = function() {
+            // دالة إغلاق النافذة المنبثقة
+            function closeModal() {
                 previewModal.style.display = 'none';
                 imageInput.value = '';
                 selectedImageData = "";
@@ -135,7 +178,7 @@
 
             cancelPublishBtn.addEventListener('click', closeModal);
 
-            // حدث تأكيد النشر والحفظ في القسم المحدد
+            // حدث تأكيد النشر والحفظ الفعلي في الـ LocalStorage
             confirmPublishBtn.addEventListener('click', function() {
                 if (!selectedImageData) {
                     alert('الرجاء اختيار صورة أولاً!');
@@ -145,13 +188,11 @@
                 const section = targetSection.value;
                 let storageKey = 'posts_' + section;
 
-                // تحديد ما إذا كانت الصورة ستذهب للسلايدر أو للشبكة في الرئيسية
                 if (section === 'index') {
                     const subType = document.getElementById('subSection').value;
                     storageKey = (subType === 'slider') ? 'posts_index_slider' : 'posts_index_grid';
                 }
                 
-                // جلب البيانات القديمة وحفظ الجديدة
                 let posts = JSON.parse(localStorage.getItem(storageKey)) || [];
                 posts.unshift(selectedImageData);
                 localStorage.setItem(storageKey, JSON.stringify(posts));
@@ -161,7 +202,7 @@
                 loadBatchPosts();
             });
 
-            // تحميل معاينة الصور داخل صفحة النشر نفسها
+            // تحميل المعاينة للصور المنشورة
             function loadBatchPosts() {
                 const postsGrid = document.getElementById('postsGrid');
                 if(!postsGrid) return;
