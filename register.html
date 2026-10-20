@@ -4,96 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب جديد - منصتي</title>
-    <link rel="stylesheet" href="register.css">
+<link rel="stylesheet" href="styles.css">
 
-    
-
+  
+  
+  
   </head>
   <body>
  
     <header>
-	  <h2>صفحة تسجيل عضو جديد</h2>
-	  <div>
-		<a href="index.html">الرئيسية</a>
-	  </div>
+      <h2>صفحة تسجيل عضو جديد</h2>
+      <div>
+        <a href="index.html">الرئيسية</a>
+      </div>
     </header>
 
     <main>
-	  <div class="form-card">
-		<h2>إنشاء حساب جديد</h2>
-		<form id="registerForm">
-		  <div class="input-group">
-			<label for="username">اسم المستخدم</label>
-			<input type="text" id="username" required placeholder="ادخل اسمك الكامل">
-		  </div>
+      <div class="form-card">
+        <h2>إنشاء حساب جديد</h2>
+        <form id="registerForm">
+          <div class="input-group">
+            <label for="appname">الاسم (الذي سيظهر في التطبيق)</label>
+            <input type="text" id="appname" required placeholder="ادخل الاسم الذي سيظهر للآخرين">
+          </div>
+           
+          <div class="input-group">
+            <label for="email">البريد الإلكتروني</label>
+            <input type="email" id="email" required placeholder="ادخل بريدك الإلكتروني">
+          </div>
 
-		  <div class="input-group">
-			<label for="username2">لقبك</label>
-			<input type="text" id="username2" required placeholder="ادخل اسم تريده ان يظهر للاخرين">
-		  </div>
-		   
-		  <div class="input-group">
-			<label for="email">البريد الإلكتروني</label>
-			<input type="email" id="email" required placeholder="ادخل بريدك الإلكتروني">
-		  </div>
+          <div class="input-group">
+            <label for="password1">كلمة المرور</label>
+            <input type="password" id="password1" required placeholder="ادخل كلمة المرور">
+          </div>
 
-		  <div class="input-group1">
-			<label for="faculty">الكلية</label>
-			<select name="facultys" id="faculty">
-			  <option value="حاسوب">حاسوب</option>
-			  <option value="طب">طب</option>
-			  <option value="صيدلة">صيدلة</option>
-			  <option value="تمريض">تمريض</option>
-			</select>
-		  </div>
-		  
-		  <div class="input-group1">
-			<label for="patch">الدفعة</label>
-			<select name="patchs" id="faculty">
-			  <option value="39">39</option>
-			  <option value="40">40</option>
-			  <option value="41">41</option>
-			  <option value="42">42</option>
-			  <option value="43">43</option>
-			  <option value="44">44</option>
-			  <option value="45">45</option>
-			  <option value="46">46</option>
-			</select>
-		  </div>
+          <div class="input-group">
+            <label for="password2">تأكيد كلمة المرور</label>
+            <input type="password" id="password2" required placeholder="أعد إدخال كلمة المرور">
+          </div>
 
-		  <div class="input-group">
-			<label for="password">كلمة المرور</label>
-			<input type="password" id="password1" required placeholder="ادخل كلمة المرور">
-		  </div>
+          <button type="submit" class="submit-btn">تسجيل الحساب</button>
+        </form>
 
-
-		  <div class="input-group">
-			<label for="password">تأكيد كلمة المرور</label>
-			<input type="password" id="password2" required placeholder="تأكيد كلمة المرور">
-		  </div>
-
-		  
-		  
-
-		  <button type="submit" class="submit-btn">تسجيل الحساب</button>
-		</form>
-
-		<div class="form-footer">
-		  لديك حساب بالفعل؟ <a href="login.html">سجل دخولك من هنا</a>
-		</div>
-	  </div>
+        <div class="form-footer">
+          لديك حساب بالفعل؟ <a href="login.html">سجل دخولك من هنا</a>
+        </div>
+      </div>
     </main>
 
-<script>
+    <script>
         document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // منع إعادة تحميل الصفحة مؤقتاً
-            
-            // محاكاة إنشاء الحساب بنجاح والانتقال للرئيسية
+            e.preventDefault();
             alert('تم إنشاء الحساب بنجاح!');
             window.location.href = "index.html";
         });
-</script>
+    </script>
 
   </body>
 </html>
-

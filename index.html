@@ -4,67 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>معرض الصور المطور - الاعدادية</title>
-<link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
   </head>
- 
-  
   <body>
 
     <!-- الهيدر الثابت -->
     <header>
       <div class="header-right">
-        <!-- زر القائمة الجانبية (الثلاث خطوط) -->
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
         <h2 class="app-title">الاعدادية</h2>
       </div>
     </header>
 
-    <!-- شريط التنقل السفلي المستقل وحده -->
+    <!-- شريط التنقل السفلي -->
     <nav class="sub-nav">
       <a href="index.html" class="nav-link">الرئيسية</a>
-     
       <a href="uni_activitys.html" class="nav-link">نشاطات الجامعة</a>
       <a href="uni_adverts.html" class="nav-link">إعلانات امتحانات</a>
     </nav>
 
-    <!-- القائمة الجانبية (Sidebar) -->
+    <!-- القائمة الجانبية -->
     <div id="mySidebar" class="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">&times;</button>
-      
       <a href="login.html">تسجيل دخول</a>
       <a href="contact.html">تواصل معنا</a>
-	    <a href="settings.html">الإعدادات</a>
+      <a href="publishing.html">نشر صورة</a>
     </div>
 
-    <!-- طبقة شفافة تغطي الشاشة عند فتح القائمة -->
     <div id="overlay" onclick="toggleSidebar()"></div>
 
     <main>
-
-
-	  <!-- 1. قسم اللاياوت المتحرك (يمين ويسار) -->
+	  <!-- 1. قسم اللاياوت المتحرك (تلقائي وبدون أزرار) -->
 	  <div class="slider-section">
 		<h3>الصور الاكثر اعجاباً</h3>
 		<div class="slider-container">
-		  <button class="slider-btn prev-btn" onclick="slide(-1)">&#10095;</button>
 		  <div id="sliderTrack" class="slider-track">
-			<!-- ستظهر الصور هنا متحركة -->
+			<!-- ستظهر الصور هنا متحركة تلقائياً -->
 		  </div>
-		  <button class="slider-btn next-btn" onclick="slide(1)">&#10094;</button>
 		</div>
 	  </div>
 
-	  <!-- 2. قسم الصور في الشاشة (صورتين في كل صف بأبعاد محددة) -->
+	  <!-- 2. قسم الصور في الشاشة (صورة واحدة في السطر) -->
 	  <div class="grid-section">
-		<h3>معرض الصور (صورتين في السطر)</h3>
+		<h3>معرض الصور</h3>
 		<div id="postsGrid" class="custom-grid">
-		  <!-- ستظهر الصور هنا بنظام صورتين لكل صف -->
+		  <!-- ستظهر الصور هنا بنظام صورة واحدة لكل صف -->
 		</div>
 	  </div>
     </main>
 
+    <script src="script.js"></script>
+    <script>
+        function loadIndexPosts() {
+            let sliderPosts = JSON.parse(localStorage.getItem('posts_index_slider')) || [];
+            let gridPosts = JSON.parse(localStorage.getItem('posts_index_grid')) || [];
+            
+            const postsGrid = document.getElementById('postsGrid');
+            const sliderTrack = document.getElementById('sliderTrack');
+            
+            if(postsGrid) postsGrid.innerHTML = '';
+            if(sliderTrack) sliderTrack.innerHTML = '';
 
-<script src="script.js"></script>
+            // عرض صور السلايدر المتحرك
+            if (sliderPosts.length === 0) {
+                if(sliderTrack) sliderTrack.innerHTML = '<p class="empty-msg" style="width:100%;">لا توجد صور في الشريط المتحرك.</p>';
+            } else {
+                sliderPosts.forEach(imgSrc => {
+                    const sliderItem = document.createElement('div');
+                    sliderItem.className = 'slider-item';
+                    sliderItem.innerHTML = `<img src="${imgSrc}" alt="صورة متحركة">`;
+                    sliderTrack.appendChild(sliderItem);
+                });
+            }
+
+            // عرض صور المعرض (صورة واحدة في السطر)
+            if (gridPosts.length === 0) {
+                if(postsGrid) postsGrid.innerHTML = '<p class="empty-msg">لا توجد صور منشورة في المعرض حالياً.</p>';
+            } else {
+                gridPosts.forEach(imgSrc => {
+                    const gridBox = document.createElement('div');
+                    gridBox.className = 'grid-box';
+                    gridBox.innerHTML = `<img src="${imgSrc}" alt="صورة المعرض">`;
+                    postsGrid.appendChild(gridBox);
+                });
+            }
+        }
+        loadIndexPosts();
+
+        // كود الحركة التلقائية للـ Slider كل 3 ثواني مع إمكانية التحريك اليدوي
+        const track = document.getElementById('sliderTrack');
+        if (track) {
+            setInterval(() => {
+                if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+                    track.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+                }
+            }, 3000);
+        }
+    </script>
   </body>
 </html>
-

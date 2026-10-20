@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة النشر - الاعدادية</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+
+    <!-- الهيدر الثابت -->
+    <header>
+      <div class="header-right">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <h2 class="app-title">الاعدادية</h2>
+      </div>
+    </header>
+
+    <!-- شريط التنقل السفلي -->
+    <nav class="sub-nav">
+      <a href="index.html" class="nav-link">الرئيسية</a>
+      <a href="uni_activitys.html" class="nav-link">نشاطات الجامعة</a>
+      <a href="uni_adverts.html" class="nav-link">إعلانات امتحانات</a>
+    </nav>
+
+    <!-- القائمة الجانبية -->
+    <div id="mySidebar" class="sidebar">
+      <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+      <a href="contact.html">تواصل معنا</a>
+      <a href="login.html">تسجيل دخول</a> 
+      <a href="publishing.html">نشر صورة</a>
+    </div>
+
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <main>
+      <!-- صندوق النشر على نمط فيسبوك -->
+      <div class="fb-post-box">
+        <div class="fb-box-top">
+          <img src="https://via.placeholder.com/150" alt="صورة البروفايل" class="user-avatar">
+          <div class="fb-fake-input" onclick="document.getElementById('imageInput').click();">مرحباً مشرفنا، اضغط هنا لنشر صورة جديدة...</div>
+        </div>
+        <div class="fb-box-bottom">
+          <input type="file" id="imageInput" accept="image/*">
+          <label for="imageInput" class="fb-action-btn">
+            <span>🖼️</span> اختر صورة للنشر
+          </label>
+        </div>
+      </div>
+
+      <!-- النافذة المنبثقة (Modal) لمعاينة الصورة واختيار القسم -->
+      <div id="previewModal" class="modal-overlay">
+        <div class="modal-card">
+          <h3>تأكيد وتحديد قسم النشر</h3>
+          
+          <div class="preview-img-container">
+            <img id="modalImagePreview" src="" alt="معاينة الصورة">
+          </div>
+
+          <!-- قائمة اختيار القسم المستهدف -->
+          <div class="input-group" style="margin-bottom: 15px; text-align: right;">
+            <label for="targetSection" style="font-weight: bold; display: block; margin-bottom: 5px; color: #2c3e50;">اختر أين تريد نشر الصورة:</label>
+            <select id="targetSection" onchange="toggleSubSection()" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: Tahoma, sans-serif;">
+              <option value="index">الرئيسية</option>
+              <option value="uni_adverts">إعلانات امتحانات</option>
+              <option value="uni_activitys">نشاطات الجامعة</option>
+            </select>
+          </div>
+
+          <!-- خيار فرعي يظهر عند اختيار الرئيسية -->
+          <div class="input-group" id="subSectionGroup" style="margin-bottom: 15px; text-align: right;">
+            <label for="subSection" style="font-weight: bold; display: block; margin-bottom: 5px; color: #2c3e50;">تحديد مكانها في الرئيسية:</label>
+            <select id="subSection" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: Tahoma, sans-serif;">
+              <option value="slider">الشرائح المتحركة (Slider)</option>
+              <option value="grid">معرض الصور الرئيسي (Grid)</option>
+            </select>
+          </div>
+
+          <div class="modal-buttons">
+            <button id="confirmPublishBtn" type="button" class="modal-btn-confirm">تأكيد النشر</button>
+            <button onclick="closeModal()" type="button" class="modal-btn-cancel">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- قسم العرض التجريبي في نفس الصفحة -->
+      <div class="grid-section">
+        <h3>الصور المنشورة (معاينة)</h3>
+        <div id="postsGrid" class="custom-grid"></div>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const previewModal = document.getElementById('previewModal');
+        const modalImagePreview = document.getElementById('modalImagePreview');
+        let selectedImageData = "";
+
+        // إظهار أو إخفاء القائمة الفرعية بناءً على اختيار الرئيسية
+        function toggleSubSection() {
+            const mainSec = document.getElementById('targetSection').value;
+            const subGroup = document.getElementById('subSectionGroup');
+            if (mainSec === 'index') {
+                subGroup.style.display = 'block';
+            } else {
+                subGroup.style.display = 'none';
+            }
+        }
+
+        // عند اختيار صورة من الجهاز
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    selectedImageData = e.target.result;
+                    modalImagePreview.src = selectedImageData;
+                    previewModal.style.display = 'flex'; // إظهار المودال
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // دالة إغلاق النافذة
+        function closeModal() {
+            previewModal.style.display = 'none';
+            imageInput.value = '';
+            selectedImageData = "";
+        }
+
+        // حدث تأكيد النشر والحفظ في القسم المحدد (تم التأكد من ربطه بالزر بشكل صحيح)
+        document.getElementById('confirmPublishBtn').addEventListener('click', function() {
+            if (!selectedImageData) {
+                alert('الرجاء اختيار صورة أولاً!');
+                return;
+            }
+
+            const targetSection = document.getElementById('targetSection').value;
+            let storageKey = 'posts_' + targetSection;
+
+            // تحديد ما إذا كانت الصورة ستذهب للسلايدر أو للشبكة في الرئيسية
+            if (targetSection === 'index') {
+                const subType = document.getElementById('subSection').value;
+                storageKey = (subType === 'slider') ? 'posts_index_slider' : 'posts_index_grid';
+            }
+            
+            // جلب البيانات القديمة وحفظ الجديدة
+            let posts = JSON.parse(localStorage.getItem(storageKey)) || [];
+            posts.unshift(selectedImageData);
+            localStorage.setItem(storageKey, JSON.stringify(posts));
+
+            closeModal();
+            alert('تم نشر الصورة بنجاح في المكان المحدد!');
+            loadBatchPosts();
+        });
+
+        // تحميل معاينة الصور داخل صفحة النشر نفسها
+        function loadBatchPosts() {
+            const postsGrid = document.getElementById('postsGrid');
+            if(!postsGrid) return;
+            postsGrid.innerHTML = '';
+            
+            let posts = JSON.parse(localStorage.getItem('posts_index_grid')) || [];
+            
+            if (posts.length === 0) {
+                postsGrid.innerHTML = '<p class="empty-msg">لا توجد صور منشورة في المعرض حالياً.</p>';
+                return;
+            }
+
+            posts.forEach(imgSrc => {
+                const gridBox = document.createElement('div');
+                gridBox.className = 'grid-box';
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                gridBox.appendChild(img);
+                postsGrid.appendChild(gridBox);
+            });
+        }
+
+        loadBatchPosts();
+    </script>
+  </body>
+</html>

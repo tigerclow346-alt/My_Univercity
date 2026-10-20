@@ -3,53 +3,63 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معرض الصور المطور - الاعدادية</title>
-<link rel="stylesheet" href="uni_adverts.css">
-
+    <title>إعلانات امتحانات - الاعدادية</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
 
     <!-- الهيدر الثابت -->
     <header>
       <div class="header-right">
-        <!-- زر القائمة الجانبية (الثلاث خطوط) -->
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
         <h2 class="app-title">الاعدادية</h2>
       </div>
     </header>
 
-    <!-- شريط التنقل السفلي المستقل وحده -->
+    <!-- شريط التنقل السفلي -->
     <nav class="sub-nav">
       <a href="index.html" class="nav-link">الرئيسية</a>
-     
       <a href="uni_activitys.html" class="nav-link">نشاطات الجامعة</a>
       <a href="uni_adverts.html" class="nav-link">إعلانات امتحانات</a>
-    </nav>
+    </nav> 
 
-    <!-- القائمة الجانبية (Sidebar) -->
+    <!-- القائمة الجانبية -->
     <div id="mySidebar" class="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">&times;</button>
-      
       <a href="login.html">تسجيل دخول</a>
       <a href="contact.html">تواصل معنا</a>
-	    <a href="settings.html">الإعدادات</a>
-      
+      <a href="publishing.html">نشر صورة</a>
     </div>
 
-    <!-- طبقة شفافة تغطي الشاشة عند فتح القائمة -->
     <div id="overlay" onclick="toggleSidebar()"></div>
 
     <main>
-
-	  <!-- 2. قسم الصور في الشاشة -->
 	  <div class="grid-section">
-		<h3>معرض الصور (صورتين في السطر)</h3>
+		<h3>إعلانات الامتحانات</h3>
 		<div id="postsGrid" class="custom-grid"></div>
 	  </div>
     </main>
 
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function loadAdverts() {
+            let posts = JSON.parse(localStorage.getItem('posts_uni_adverts')) || [];
+            const postsGrid = document.getElementById('postsGrid');
+            if(!postsGrid) return;
+            
+            postsGrid.innerHTML = '';
+            if (posts.length === 0) {
+                postsGrid.innerHTML = '<p class="empty-msg">لا توجد إعلانات منشورة حالياً.</p>';
+                return;
+            }
+            posts.forEach(imgSrc => {
+                const gridBox = document.createElement('div');
+                gridBox.className = 'grid-box';
+                gridBox.innerHTML = `<img src="${imgSrc}" alt="إعلان">`;
+                postsGrid.appendChild(gridBox);
+            });
+        }
+        loadAdverts();
+    </script>
   </body>
 </html>
-
