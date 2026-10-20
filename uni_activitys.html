@@ -8,7 +8,6 @@
   </head>
   <body>
 
-    <!-- الهيدر الثابت -->
     <header>
       <div class="header-right">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -16,14 +15,12 @@
       </div>
     </header>
 
-    <!-- شريط التنقل السفلي -->
     <nav class="sub-nav">
       <a href="index.html" class="nav-link">الرئيسية</a>
       <a href="uni_activitys.html" class="nav-link">نشاطات الجامعة</a>
       <a href="uni_adverts.html" class="nav-link">إعلانات امتحانات</a>
     </nav>
 
-    <!-- القائمة الجانبية -->
     <div id="mySidebar" class="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">&times;</button>
       <a href="login.html">تسجيل دخول</a>
@@ -36,12 +33,14 @@
     <main>
 	  <div class="grid-section">
 		<h3>آخر النشاطات</h3>
+        <p style="font-size: 13px; color: #666; text-align: center;">(لوحة تحكم المشرف: يمكنك حذف أي نشاط)</p>
 		<div id="postsGrid" class="custom-grid"></div>
 	  </div>
     </main>
 
     <script src="script.js"></script>
     <script>
+        // جاهز للربط المستقبلي مع Database API
         function loadActivities() {
             let posts = JSON.parse(localStorage.getItem('posts_uni_activitys')) || [];
             const postsGrid = document.getElementById('postsGrid');
@@ -52,10 +51,30 @@
                 postsGrid.innerHTML = '<p class="empty-msg">لا توجد نشاطات منشورة حالياً.</p>';
                 return;
             }
-            posts.forEach(imgSrc => {
+
+            posts.forEach((imgSrc, index) => {
                 const gridBox = document.createElement('div');
                 gridBox.className = 'grid-box';
-                gridBox.innerHTML = `<img src="${imgSrc}" alt="نشاط">`;
+                
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.alt = "نشاط";
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '🗑️ حذف الصورة';
+                deleteBtn.style.cssText = 'background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 8px; width: 100%; font-weight: bold; font-family: Tahoma, sans-serif;';
+
+                deleteBtn.onclick = function() {
+                    if (confirm('هل أنت متأكد من رغبتك في حذف هذا النشاط؟')) {
+                        posts.splice(index, 1);
+                        localStorage.setItem('posts_uni_activitys', JSON.stringify(posts));
+                        loadActivities();
+                        alert('تم حذف الصورة بنجاح!');
+                    }
+                };
+
+                gridBox.appendChild(img);
+                gridBox.appendChild(deleteBtn);
                 postsGrid.appendChild(gridBox);
             });
         }

@@ -222,7 +222,7 @@ main {
 /* ================= تنسيق أقسام الصور (الرئيسية) ================= */
 .slider-section {
     background: white;
-    padding: 15px;
+    padding: 7px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     margin-bottom: 30px;
@@ -231,6 +231,7 @@ main {
 .slider-container {
     position: relative;
     display: flex;
+
     align-items: center;
 }
 
@@ -249,13 +250,13 @@ main {
 }
 
 .slider-item {
-    flex: 0 0 150px;
-    height: 150px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    width: 200px;
+  height: 220px;
 }
-
 .slider-item img {
     width: 100%;
     height: 100%;

@@ -8,7 +8,6 @@
   </head>
   <body>
 
-    <!-- الهيدر الثابت -->
     <header>
       <div class="header-right">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -16,14 +15,12 @@
       </div>
     </header>
 
-    <!-- شريط التنقل السفلي -->
     <nav class="sub-nav">
       <a href="index.html" class="nav-link">الرئيسية</a>
       <a href="uni_activitys.html" class="nav-link">نشاطات الجامعة</a>
       <a href="uni_adverts.html" class="nav-link">إعلانات امتحانات</a>
     </nav>
 
-    <!-- القائمة الجانبية -->
     <div id="mySidebar" class="sidebar">
       <button class="close-btn" onclick="toggleSidebar()">&times;</button>
       <a href="login.html">تسجيل دخول</a>
@@ -34,27 +31,23 @@
     <div id="overlay" onclick="toggleSidebar()"></div>
 
     <main>
-	  <!-- 1. قسم اللاياوت المتحرك (تلقائي وبدون أزرار) -->
 	  <div class="slider-section">
 		<h3>الصور الاكثر اعجاباً</h3>
 		<div class="slider-container">
-		  <div id="sliderTrack" class="slider-track">
-			<!-- ستظهر الصور هنا متحركة تلقائياً -->
-		  </div>
+		  <div id="sliderTrack" class="slider-track"></div>
 		</div>
 	  </div>
 
-	  <!-- 2. قسم الصور في الشاشة (صورة واحدة في السطر) -->
 	  <div class="grid-section">
 		<h3>معرض الصور</h3>
-		<div id="postsGrid" class="custom-grid">
-		  <!-- ستظهر الصور هنا بنظام صورة واحدة لكل صف -->
-		</div>
+        <p style="font-size: 13px; color: #666; text-align: center;">(لوحة تحكم المشرف: يمكنك حذف أي صورة)</p>
+		<div id="postsGrid" class="custom-grid"></div>
 	  </div>
     </main>
 
     <script src="script.js"></script>
     <script>
+        // جاهز للربط المستقبلي مع Database API
         function loadIndexPosts() {
             let sliderPosts = JSON.parse(localStorage.getItem('posts_index_slider')) || [];
             let gridPosts = JSON.parse(localStorage.getItem('posts_index_grid')) || [];
@@ -65,11 +58,10 @@
             if(postsGrid) postsGrid.innerHTML = '';
             if(sliderTrack) sliderTrack.innerHTML = '';
 
-            // عرض صور السلايدر المتحرك
             if (sliderPosts.length === 0) {
                 if(sliderTrack) sliderTrack.innerHTML = '<p class="empty-msg" style="width:100%;">لا توجد صور في الشريط المتحرك.</p>';
             } else {
-                sliderPosts.forEach(imgSrc => {
+                sliderPosts.forEach((imgSrc, index) => {
                     const sliderItem = document.createElement('div');
                     sliderItem.className = 'slider-item';
                     sliderItem.innerHTML = `<img src="${imgSrc}" alt="صورة متحركة">`;
@@ -77,21 +69,39 @@
                 });
             }
 
-            // عرض صور المعرض (صورة واحدة في السطر)
             if (gridPosts.length === 0) {
                 if(postsGrid) postsGrid.innerHTML = '<p class="empty-msg">لا توجد صور منشورة في المعرض حالياً.</p>';
             } else {
-                gridPosts.forEach(imgSrc => {
+                gridPosts.forEach((imgSrc, index) => {
                     const gridBox = document.createElement('div');
                     gridBox.className = 'grid-box';
-                    gridBox.innerHTML = `<img src="${imgSrc}" alt="صورة المعرض">`;
+                    
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = "صورة المعرض";
+
+                    // زر الحذف (مهيأ للتحقق من صلاحيات المشرفين عند ربط القاعدة)
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.innerHTML = '🗑️ حذف الصورة';
+                    deleteBtn.style.cssText = 'background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-top: 8px; width: 100%; font-weight: bold; font-family: Tahoma, sans-serif;';
+                    
+                    deleteBtn.onclick = function() {
+                        if (confirm('هل أنت متأكد من حذف هذه الصورة من الرئيسية؟')) {
+                            gridPosts.splice(index, 1);
+                            localStorage.setItem('posts_index_grid', JSON.stringify(gridPosts));
+                            loadIndexPosts();
+                            alert('تم الحذف بنجاح!');
+                        }
+                    };
+
+                    gridBox.appendChild(img);
+                    gridBox.appendChild(deleteBtn);
                     postsGrid.appendChild(gridBox);
                 });
             }
         }
         loadIndexPosts();
 
-        // كود الحركة التلقائية للـ Slider كل 3 ثواني مع إمكانية التحريك اليدوي
         const track = document.getElementById('sliderTrack');
         if (track) {
             setInterval(() => {
